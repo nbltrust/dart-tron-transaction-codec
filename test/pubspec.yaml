@@ -3,6 +3,11 @@ version: 0.1.0
 publish_to: 'none'
 
 dependencies:
+  eth_abi_codec:
+    git:
+     url: https://github.com/nbltrust/dart-eth-abi-codec
+     ref: '0.2.1'
+
   tron_codec:
     path: ../
 

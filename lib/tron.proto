@@ -1,0 +1,1449 @@
+syntax = "proto3";
+
+message protocol {
+
+    option java_package = "org.tron.protos";
+    option go_package = "github.com/tronprotocol/grpc-gateway/core";
+    option java_outer_classname = "Protocol";
+
+    message ExchangeCreateContract {
+
+        bytes owner_address = 1;
+        bytes first_token_id = 2;
+        int64 first_token_balance = 3;
+        bytes second_token_id = 4;
+        int64 second_token_balance = 5;
+    }
+
+    message ExchangeInjectContract {
+
+        bytes owner_address = 1;
+        int64 exchange_id = 2;
+        bytes token_id = 3;
+        int64 quant = 4;
+    }
+
+    message ExchangeWithdrawContract {
+
+        bytes owner_address = 1;
+        int64 exchange_id = 2;
+        bytes token_id = 3;
+        int64 quant = 4;
+    }
+
+    message ExchangeTransactionContract {
+
+        bytes owner_address = 1;
+        int64 exchange_id = 2;
+        bytes token_id = 3;
+        int64 quant = 4;
+        int64 expected = 5;
+    }
+
+    message MarketSellAssetContract {
+
+        bytes owner_address = 1;
+        bytes sell_token_id = 2;
+        int64 sell_token_quantity = 3;
+        bytes buy_token_id = 4;
+        int64 buy_token_quantity = 5;
+    }
+
+    message MarketCancelOrderContract {
+
+        bytes owner_address = 1;
+        bytes order_id = 2;
+    }
+
+    message AccountCreateContract {
+
+        bytes owner_address = 1;
+        bytes account_address = 2;
+        AccountType type = 3;
+    }
+
+    message AccountUpdateContract {
+
+        bytes account_name = 1;
+        bytes owner_address = 2;
+    }
+
+    message SetAccountIdContract {
+
+        bytes account_id = 1;
+        bytes owner_address = 2;
+    }
+
+    message AccountPermissionUpdateContract {
+
+        bytes owner_address = 1;
+        Permission owner = 2;
+        Permission witness = 3;
+        repeated Permission actives = 4;
+    }
+
+    message AssetIssueContract {
+
+        string id = 41;
+        bytes owner_address = 1;
+        bytes name = 2;
+        bytes abbr = 3;
+        int64 total_supply = 4;
+        repeated FrozenSupply frozen_supply = 5;
+        int32 trx_num = 6;
+        int32 precision = 7;
+        int32 num = 8;
+        int64 start_time = 9;
+        int64 end_time = 10;
+        int64 order = 11;
+        int32 vote_score = 16;
+        bytes description = 20;
+        bytes url = 21;
+        int64 free_asset_net_limit = 22;
+        int64 public_free_asset_net_limit = 23;
+        int64 public_free_asset_net_usage = 24;
+        int64 public_latest_free_net_time = 25;
+
+        message FrozenSupply {
+
+            int64 frozen_amount = 1;
+            int64 frozen_days = 2;
+        }
+    }
+
+    message TransferAssetContract {
+
+        bytes asset_name = 1;
+        bytes owner_address = 2;
+        bytes to_address = 3;
+        int64 amount = 4;
+    }
+
+    message UnfreezeAssetContract {
+
+        bytes owner_address = 1;
+    }
+
+    message UpdateAssetContract {
+
+        bytes owner_address = 1;
+        bytes description = 2;
+        bytes url = 3;
+        int64 new_limit = 4;
+        int64 new_public_limit = 5;
+    }
+
+    message ParticipateAssetIssueContract {
+
+        bytes owner_address = 1;
+        bytes to_address = 2;
+        bytes asset_name = 3;
+        int64 amount = 4;
+    }
+
+    message AuthenticationPath {
+
+        repeated bool value = 1;
+    }
+
+    message MerklePath {
+
+        repeated AuthenticationPath authentication_paths = 1;
+        repeated bool index = 2;
+        bytes rt = 3;
+    }
+
+    message OutputPoint {
+
+        bytes hash = 1;
+        int32 index = 2;
+    }
+
+    message OutputPointInfo {
+
+        repeated OutputPoint out_points = 1;
+        int32 block_num = 2;
+    }
+
+    message PedersenHash {
+
+        bytes content = 1;
+    }
+
+    message IncrementalMerkleTree {
+
+        PedersenHash left = 1;
+        PedersenHash right = 2;
+        repeated PedersenHash parents = 3;
+    }
+
+    message IncrementalMerkleVoucher {
+
+        IncrementalMerkleTree tree = 1;
+        repeated PedersenHash filled = 2;
+        IncrementalMerkleTree cursor = 3;
+        int64 cursor_depth = 4;
+        bytes rt = 5;
+        OutputPoint output_point = 10;
+    }
+
+    message IncrementalMerkleVoucherInfo {
+
+        repeated IncrementalMerkleVoucher vouchers = 1;
+        repeated bytes paths = 2;
+    }
+
+    message SpendDescription {
+
+        bytes value_commitment = 1;
+        bytes anchor = 2;
+        bytes nullifier = 3;
+        bytes rk = 4;
+        bytes zkproof = 5;
+        bytes spend_authority_signature = 6;
+    }
+
+    message ReceiveDescription {
+
+        bytes value_commitment = 1;
+        bytes note_commitment = 2;
+        bytes epk = 3;
+        bytes c_enc = 4;
+        bytes c_out = 5;
+        bytes zkproof = 6;
+    }
+
+    message ShieldedTransferContract {
+
+        bytes transparent_from_address = 1;
+        int64 from_amount = 2;
+        repeated SpendDescription spend_description = 3;
+        repeated ReceiveDescription receive_description = 4;
+        bytes binding_signature = 5;
+        bytes transparent_to_address = 6;
+        int64 to_amount = 7;
+    }
+
+    message SmartContract {
+
+        bytes origin_address = 1;
+        bytes contract_address = 2;
+        ABI abi = 3;
+        bytes bytecode = 4;
+        int64 call_value = 5;
+        int64 consume_user_resource_percent = 6;
+        string name = 7;
+        int64 origin_energy_limit = 8;
+        bytes code_hash = 9;
+        bytes trx_hash = 10;
+
+        message ABI {
+
+            repeated Entry entrys = 1;
+
+            message Entry {
+
+                bool anonymous = 1;
+                bool constant = 2;
+                string name = 3;
+                repeated Param inputs = 4;
+                repeated Param outputs = 5;
+                EntryType type = 6;
+                bool payable = 7;
+                StateMutabilityType state_mutability = 8;
+
+                enum EntryType {
+
+                    UnknownEntryType = 0;
+                    Constructor = 1;
+                    Function = 2;
+                    Event = 3;
+                    Fallback = 4;
+                    Receive = 5;
+                    Error = 6;
+                }
+
+                message Param {
+
+                    bool indexed = 1;
+                    string name = 2;
+                    string type = 3;
+                }
+
+                enum StateMutabilityType {
+
+                    UnknownMutabilityType = 0;
+                    Pure = 1;
+                    View = 2;
+                    Nonpayable = 3;
+                    Payable = 4;
+                }
+            }
+        }
+    }
+
+    message CreateSmartContract {
+
+        bytes owner_address = 1;
+        SmartContract new_contract = 2;
+        int64 call_token_value = 3;
+        int64 token_id = 4;
+    }
+
+    message TriggerSmartContract {
+
+        bytes owner_address = 1;
+        bytes contract_address = 2;
+        int64 call_value = 3;
+        bytes data = 4;
+        int64 call_token_value = 5;
+        int64 token_id = 6;
+    }
+
+    message ClearABIContract {
+
+        bytes owner_address = 1;
+        bytes contract_address = 2;
+    }
+
+    message UpdateSettingContract {
+
+        bytes owner_address = 1;
+        bytes contract_address = 2;
+        int64 consume_user_resource_percent = 3;
+    }
+
+    message UpdateEnergyLimitContract {
+
+        bytes owner_address = 1;
+        bytes contract_address = 2;
+        int64 origin_energy_limit = 3;
+    }
+
+    message SmartContractDataWrapper {
+
+        SmartContract smart_contract = 1;
+        bytes runtimecode = 2;
+    }
+
+    message BuyStorageBytesContract {
+
+        bytes owner_address = 1;
+        int64 bytes = 2;
+    }
+
+    message BuyStorageContract {
+
+        bytes owner_address = 1;
+        int64 quant = 2;
+    }
+
+    message SellStorageContract {
+
+        bytes owner_address = 1;
+        int64 storage_bytes = 2;
+    }
+
+    message UpdateBrokerageContract {
+
+        bytes owner_address = 1;
+        int32 brokerage = 2;
+    }
+
+    message ProposalApproveContract {
+
+        bytes owner_address = 1;
+        int64 proposal_id = 2;
+        bool is_add_approval = 3;
+    }
+
+    message ProposalCreateContract {
+
+        bytes owner_address = 1;
+        map<int64, int64> parameters = 2;
+    }
+
+    message ProposalDeleteContract {
+
+        bytes owner_address = 1;
+        int64 proposal_id = 2;
+    }
+
+    message VoteAssetContract {
+
+        bytes owner_address = 1;
+        repeated bytes vote_address = 2;
+        bool support = 3;
+        int32 count = 5;
+    }
+
+    message WitnessCreateContract {
+
+        bytes owner_address = 1;
+        bytes url = 2;
+    }
+
+    message WitnessUpdateContract {
+
+        bytes owner_address = 1;
+        bytes update_url = 12;
+    }
+
+    message VoteWitnessContract {
+
+        bytes owner_address = 1;
+        repeated Vote votes = 2;
+        bool support = 3;
+
+        message Vote {
+
+            bytes vote_address = 1;
+            int64 vote_count = 2;
+        }
+    }
+
+    message FreezeBalanceContract {
+
+        bytes owner_address = 1;
+        int64 frozen_balance = 2;
+        int64 frozen_duration = 3;
+        ResourceCode resource = 10;
+        bytes receiver_address = 15;
+    }
+
+    message UnfreezeBalanceContract {
+
+        bytes owner_address = 1;
+        ResourceCode resource = 10;
+        bytes receiver_address = 15;
+    }
+
+    message WithdrawBalanceContract {
+
+        bytes owner_address = 1;
+    }
+
+    message TransferContract {
+
+        bytes owner_address = 1;
+        bytes to_address = 2;
+        int64 amount = 3;
+    }
+
+    message TransactionBalanceTrace {
+
+        bytes transaction_identifier = 1;
+        repeated Operation operation = 2;
+        string type = 3;
+        string status = 4;
+
+        message Operation {
+
+            int64 operation_identifier = 1;
+            bytes address = 2;
+            int64 amount = 3;
+        }
+    }
+
+    message BlockBalanceTrace {
+
+        BlockIdentifier block_identifier = 1;
+        int64 timestamp = 2;
+        repeated TransactionBalanceTrace transaction_balance_trace = 3;
+
+        message BlockIdentifier {
+
+            bytes hash = 1;
+            int64 number = 2;
+        }
+    }
+
+    message AccountTrace {
+
+        int64 balance = 1;
+        int64 placeholder = 99;
+    }
+
+    message AccountIdentifier {
+
+        bytes address = 1;
+    }
+
+    message AccountBalanceRequest {
+
+        AccountIdentifier account_identifier = 1;
+        BlockBalanceTrace.BlockIdentifier block_identifier = 2;
+    }
+
+    message AccountBalanceResponse {
+
+        int64 balance = 1;
+        BlockBalanceTrace.BlockIdentifier block_identifier = 2;
+    }
+
+    enum ResourceCode {
+
+        BANDWIDTH = 0;
+        ENERGY = 1;
+        TRON_POWER = 2;
+    }
+
+    message InventoryItems {
+
+        int32 type = 1;
+        repeated bytes items = 2;
+    }
+
+    message Endpoint {
+
+        bytes address = 1;
+        int32 port = 2;
+        bytes node_id = 3;
+    }
+
+    message PingMessage {
+
+        Endpoint from = 1;
+        Endpoint to = 2;
+        int32 version = 3;
+        int64 timestamp = 4;
+    }
+
+    message PongMessage {
+
+        Endpoint from = 1;
+        int32 echo = 2;
+        int64 timestamp = 3;
+    }
+
+    message FindNeighbours {
+
+        Endpoint from = 1;
+        bytes target_id = 2;
+        int64 timestamp = 3;
+    }
+
+    message Neighbours {
+
+        Endpoint from = 1;
+        repeated Endpoint neighbours = 2;
+        int64 timestamp = 3;
+    }
+
+    message BackupMessage {
+
+        bool flag = 1;
+        int32 priority = 2;
+    }
+
+    enum AccountType {
+
+        Normal = 0;
+        AssetIssue = 1;
+        Contract = 2;
+    }
+
+    message AccountId {
+
+        bytes name = 1;
+        bytes address = 2;
+    }
+
+    message Vote {
+
+        bytes vote_address = 1;
+        int64 vote_count = 2;
+    }
+
+    message Proposal {
+
+        int64 proposal_id = 1;
+        bytes proposer_address = 2;
+        map<int64, int64> parameters = 3;
+        int64 expiration_time = 4;
+        int64 create_time = 5;
+        repeated bytes approvals = 6;
+        State state = 7;
+
+        enum State {
+
+            PENDING = 0;
+            DISAPPROVED = 1;
+            APPROVED = 2;
+            CANCELED = 3;
+        }
+    }
+
+    message Exchange {
+
+        int64 exchange_id = 1;
+        bytes creator_address = 2;
+        int64 create_time = 3;
+        bytes first_token_id = 6;
+        int64 first_token_balance = 7;
+        bytes second_token_id = 8;
+        int64 second_token_balance = 9;
+    }
+
+    message MarketOrder {
+
+        bytes order_id = 1;
+        bytes owner_address = 2;
+        int64 create_time = 3;
+        bytes sell_token_id = 4;
+        int64 sell_token_quantity = 5;
+        bytes buy_token_id = 6;
+        int64 buy_token_quantity = 7;
+        int64 sell_token_quantity_remain = 9;
+        int64 sell_token_quantity_return = 10;
+        State state = 11;
+        bytes prev = 12;
+        bytes next = 13;
+
+        enum State {
+
+            ACTIVE = 0;
+            INACTIVE = 1;
+            CANCELED = 2;
+        }
+    }
+
+    message MarketOrderList {
+
+        repeated MarketOrder orders = 1;
+    }
+
+    message MarketOrderPairList {
+
+        repeated MarketOrderPair order_pair = 1;
+    }
+
+    message MarketOrderPair {
+
+        bytes sell_token_id = 1;
+        bytes buy_token_id = 2;
+    }
+
+    message MarketAccountOrder {
+
+        bytes owner_address = 1;
+        repeated bytes orders = 2;
+        int64 count = 3;
+        int64 total_count = 4;
+    }
+
+    message MarketPrice {
+
+        int64 sell_token_quantity = 1;
+        int64 buy_token_quantity = 2;
+    }
+
+    message MarketPriceList {
+
+        bytes sell_token_id = 1;
+        bytes buy_token_id = 2;
+        repeated MarketPrice prices = 3;
+    }
+
+    message MarketOrderIdList {
+
+        bytes head = 1;
+        bytes tail = 2;
+    }
+
+    message ChainParameters {
+
+        repeated ChainParameter chain_parameter = 1;
+
+        message ChainParameter {
+
+            string key = 1;
+            int64 value = 2;
+        }
+    }
+
+    message Account {
+
+        bytes account_name = 1;
+        AccountType type = 2;
+        bytes address = 3;
+        int64 balance = 4;
+        repeated Vote votes = 5;
+        map<string, int64> asset = 6;
+        map<string, int64> assetV2 = 56;
+        repeated Frozen frozen = 7;
+        int64 net_usage = 8;
+        int64 acquired_delegated_frozen_balance_for_bandwidth = 41;
+        int64 delegated_frozen_balance_for_bandwidth = 42;
+        int64 old_tron_power = 46;
+        Frozen tron_power = 47;
+        int64 create_time = 9;
+        int64 latest_opration_time = 10;
+        int64 allowance = 11;
+        int64 latest_withdraw_time = 12;
+        bytes code = 13;
+        bool is_witness = 14;
+        bool is_committee = 15;
+        repeated Frozen frozen_supply = 16;
+        bytes asset_issued_name = 17;
+        bytes asset_issued_I_d = 57;
+        map<string, int64> latest_asset_operation_time = 18;
+        map<string, int64> latest_asset_operation_timeV2 = 58;
+        int64 free_net_usage = 19;
+        map<string, int64> free_asset_net_usage = 20;
+        map<string, int64> free_asset_net_usageV2 = 59;
+        int64 latest_consume_time = 21;
+        int64 latest_consume_free_time = 22;
+        bytes account_id = 23;
+        AccountResource account_resource = 26;
+        bytes code_hash = 30;
+        Permission owner_permission = 31;
+        Permission witness_permission = 32;
+        repeated Permission active_permission = 33;
+
+        message Frozen {
+
+            int64 frozen_balance = 1;
+            int64 expire_time = 2;
+        }
+
+        message AccountResource {
+
+            int64 energy_usage = 1;
+            Frozen frozen_balance_for_energy = 2;
+            int64 latest_consume_time_for_energy = 3;
+            int64 acquired_delegated_frozen_balance_for_energy = 4;
+            int64 delegated_frozen_balance_for_energy = 5;
+            int64 storage_limit = 6;
+            int64 storage_usage = 7;
+            int64 latest_exchange_storage_time = 8;
+        }
+    }
+
+    message AccountAsset {
+
+        bytes address = 1;
+        map<string, int64> asset = 2;
+        map<string, int64> assetV2 = 3;
+        bytes asset_issued_name = 4;
+        bytes asset_issued_I_d = 5;
+        map<string, int64> latest_asset_operation_time = 6;
+        map<string, int64> latest_asset_operation_timeV2 = 7;
+        map<string, int64> free_asset_net_usage = 8;
+        map<string, int64> free_asset_net_usageV2 = 9;
+        repeated Frozen frozen_supply = 10;
+
+        message Frozen {
+
+            int64 frozen_balance = 1;
+            int64 expire_time = 2;
+        }
+    }
+
+    message Key {
+
+        bytes address = 1;
+        int64 weight = 2;
+    }
+
+    message DelegatedResource {
+
+        bytes from = 1;
+        bytes to = 2;
+        int64 frozen_balance_for_bandwidth = 3;
+        int64 frozen_balance_for_energy = 4;
+        int64 expire_time_for_bandwidth = 5;
+        int64 expire_time_for_energy = 6;
+    }
+
+    message authority {
+
+        AccountId account = 1;
+        bytes permission_name = 2;
+    }
+
+    message Permission {
+
+        PermissionType type = 1;
+        int32 id = 2;
+        string permission_name = 3;
+        int64 threshold = 4;
+        int32 parent_id = 5;
+        bytes operations = 6;
+        repeated Key keys = 7;
+
+        enum PermissionType {
+
+            Owner = 0;
+            Witness = 1;
+            Active = 2;
+        }
+    }
+
+    message Witness {
+
+        bytes address = 1;
+        int64 vote_count = 2;
+        bytes pub_key = 3;
+        string url = 4;
+        int64 total_produced = 5;
+        int64 total_missed = 6;
+        int64 latest_block_num = 7;
+        int64 latest_slot_num = 8;
+        bool is_jobs = 9;
+    }
+
+    message Votes {
+
+        bytes address = 1;
+        repeated Vote old_votes = 2;
+        repeated Vote new_votes = 3;
+    }
+
+    message TXOutput {
+
+        int64 value = 1;
+        bytes pub_key_hash = 2;
+    }
+
+    message TXInput {
+
+        raw raw_data = 1;
+        bytes signature = 4;
+
+        message raw {
+
+            bytes txI_d = 1;
+            int64 vout = 2;
+            bytes pub_key = 3;
+        }
+    }
+
+    message TXOutputs {
+
+        repeated TXOutput outputs = 1;
+    }
+
+    message ResourceReceipt {
+
+        int64 energy_usage = 1;
+        int64 energy_fee = 2;
+        int64 origin_energy_usage = 3;
+        int64 energy_usage_total = 4;
+        int64 net_usage = 5;
+        int64 net_fee = 6;
+        Transaction.Result.contractResult result = 7;
+    }
+
+    message MarketOrderDetail {
+
+        bytes maker_order_id = 1;
+        bytes taker_order_id = 2;
+        int64 fill_sell_quantity = 3;
+        int64 fill_buy_quantity = 4;
+    }
+
+    message Transaction {
+
+        raw raw_data = 1;
+        repeated bytes signature = 2;
+        repeated Result ret = 5;
+
+        message Contract {
+
+            ContractType type = 1;
+            google.protobuf.Any parameter = 2;
+            bytes provider = 3;
+            bytes Contract_name = 4;
+            int32 Permission_id = 5;
+
+            enum ContractType {
+
+                AccountCreateContract = 0;
+                TransferContract = 1;
+                TransferAssetContract = 2;
+                VoteAssetContract = 3;
+                VoteWitnessContract = 4;
+                WitnessCreateContract = 5;
+                AssetIssueContract = 6;
+                WitnessUpdateContract = 8;
+                ParticipateAssetIssueContract = 9;
+                AccountUpdateContract = 10;
+                FreezeBalanceContract = 11;
+                UnfreezeBalanceContract = 12;
+                WithdrawBalanceContract = 13;
+                UnfreezeAssetContract = 14;
+                UpdateAssetContract = 15;
+                ProposalCreateContract = 16;
+                ProposalApproveContract = 17;
+                ProposalDeleteContract = 18;
+                SetAccountIdContract = 19;
+                CustomContract = 20;
+                CreateSmartContract = 30;
+                TriggerSmartContract = 31;
+                GetContract = 32;
+                UpdateSettingContract = 33;
+                ExchangeCreateContract = 41;
+                ExchangeInjectContract = 42;
+                ExchangeWithdrawContract = 43;
+                ExchangeTransactionContract = 44;
+                UpdateEnergyLimitContract = 45;
+                AccountPermissionUpdateContract = 46;
+                ClearABIContract = 48;
+                UpdateBrokerageContract = 49;
+                ShieldedTransferContract = 51;
+                MarketSellAssetContract = 52;
+                MarketCancelOrderContract = 53;
+            }
+        }
+
+        message Result {
+
+            int64 fee = 1;
+            code ret = 2;
+            contractResult contract_ret = 3;
+            string asset_issueI_d = 14;
+            int64 withdraw_amount = 15;
+            int64 unfreeze_amount = 16;
+            int64 exchange_received_amount = 18;
+            int64 exchange_inject_another_amount = 19;
+            int64 exchange_withdraw_another_amount = 20;
+            int64 exchange_id = 21;
+            int64 shielded_transaction_fee = 22;
+            bytes order_id = 25;
+            repeated MarketOrderDetail order_details = 26;
+
+            enum code {
+
+                SUCESS = 0;
+                FAILED = 1;
+            }
+
+            enum contractResult {
+
+                DEFAULT = 0;
+                SUCCESS = 1;
+                REVERT = 2;
+                BAD_JUMP_DESTINATION = 3;
+                OUT_OF_MEMORY = 4;
+                PRECOMPILED_CONTRACT = 5;
+                STACK_TOO_SMALL = 6;
+                STACK_TOO_LARGE = 7;
+                ILLEGAL_OPERATION = 8;
+                STACK_OVERFLOW = 9;
+                OUT_OF_ENERGY = 10;
+                OUT_OF_TIME = 11;
+                JVM_STACK_OVER_FLOW = 12;
+                UNKNOWN = 13;
+                TRANSFER_FAILED = 14;
+            }
+        }
+
+        message raw {
+
+            bytes ref_block_bytes = 1;
+            int64 ref_block_num = 3;
+            bytes ref_block_hash = 4;
+            int64 expiration = 8;
+            repeated authority auths = 9;
+            bytes data = 10;
+            repeated Contract contract = 11;
+            bytes scripts = 12;
+            int64 timestamp = 14;
+            int64 fee_limit = 18;
+        }
+    }
+
+    message TransactionInfo {
+
+        bytes id = 1;
+        int64 fee = 2;
+        int64 block_number = 3;
+        int64 block_time_stamp = 4;
+        repeated bytes contract_result = 5;
+        bytes contract_address = 6;
+        ResourceReceipt receipt = 7;
+        repeated Log log = 8;
+        code result = 9;
+        bytes res_message = 10;
+        string asset_issueI_d = 14;
+        int64 withdraw_amount = 15;
+        int64 unfreeze_amount = 16;
+        repeated InternalTransaction internal_transactions = 17;
+        int64 exchange_received_amount = 18;
+        int64 exchange_inject_another_amount = 19;
+        int64 exchange_withdraw_another_amount = 20;
+        int64 exchange_id = 21;
+        int64 shielded_transaction_fee = 22;
+        bytes order_id = 25;
+        repeated MarketOrderDetail order_details = 26;
+        int64 packing_fee = 27;
+
+        enum code {
+
+            SUCESS = 0;
+            FAILED = 1;
+        }
+
+        message Log {
+
+            bytes address = 1;
+            repeated bytes topics = 2;
+            bytes data = 3;
+        }
+    }
+
+    message TransactionRet {
+
+        int64 block_number = 1;
+        int64 block_time_stamp = 2;
+        repeated TransactionInfo transactioninfo = 3;
+    }
+
+    message Transactions {
+
+        repeated Transaction transactions = 1;
+    }
+
+    message TransactionSign {
+
+        Transaction transaction = 1;
+        bytes private_key = 2;
+    }
+
+    message BlockHeader {
+
+        raw raw_data = 1;
+        bytes witness_signature = 2;
+
+        message raw {
+
+            int64 timestamp = 1;
+            bytes tx_trie_root = 2;
+            bytes parent_hash = 3;
+            int64 number = 7;
+            int64 witness_id = 8;
+            bytes witness_address = 9;
+            int32 version = 10;
+            bytes account_state_root = 11;
+        }
+    }
+
+    message Block {
+
+        repeated Transaction transactions = 1;
+        BlockHeader block_header = 2;
+    }
+
+    message ChainInventory {
+
+        repeated BlockId ids = 1;
+        int64 remain_num = 2;
+
+        message BlockId {
+
+            bytes hash = 1;
+            int64 number = 2;
+        }
+    }
+
+    message BlockInventory {
+
+        repeated BlockId ids = 1;
+        Type type = 2;
+
+        enum Type {
+
+            SYNC = 0;
+            ADVTISE = 1;
+            FETCH = 2;
+        }
+
+        message BlockId {
+
+            bytes hash = 1;
+            int64 number = 2;
+        }
+    }
+
+    message Inventory {
+
+        InventoryType type = 1;
+        repeated bytes ids = 2;
+
+        enum InventoryType {
+
+            TRX = 0;
+            BLOCK = 1;
+        }
+    }
+
+    message Items {
+
+        ItemType type = 1;
+        repeated Block blocks = 2;
+        repeated BlockHeader block_headers = 3;
+        repeated Transaction transactions = 4;
+
+        enum ItemType {
+
+            ERR = 0;
+            TRX = 1;
+            BLOCK = 2;
+            BLOCKHEADER = 3;
+        }
+    }
+
+    message DynamicProperties {
+
+        int64 last_solidity_block_num = 1;
+    }
+
+    enum ReasonCode {
+
+        REQUESTED = 0;
+        BAD_PROTOCOL = 2;
+        TOO_MANY_PEERS = 4;
+        DUPLICATE_PEER = 5;
+        INCOMPATIBLE_PROTOCOL = 6;
+        NULL_IDENTITY = 7;
+        PEER_QUITING = 8;
+        UNEXPECTED_IDENTITY = 9;
+        LOCAL_IDENTITY = 10;
+        PING_TIMEOUT = 11;
+        USER_REASON = 16;
+        RESET = 17;
+        SYNC_FAIL = 18;
+        FETCH_FAIL = 19;
+        BAD_TX = 20;
+        BAD_BLOCK = 21;
+        FORKED = 22;
+        UNLINKABLE = 23;
+        INCOMPATIBLE_VERSION = 24;
+        INCOMPATIBLE_CHAIN = 25;
+        TIME_OUT = 32;
+        CONNECT_FAIL = 33;
+        TOO_MANY_PEERS_WITH_SAME_IP = 34;
+        UNKNOWN = 255;
+    }
+
+    message DisconnectMessage {
+
+        ReasonCode reason = 1;
+    }
+
+    message HelloMessage {
+
+        Endpoint from = 1;
+        int32 version = 2;
+        int64 timestamp = 3;
+        BlockId genesis_block_id = 4;
+        BlockId solid_block_id = 5;
+        BlockId head_block_id = 6;
+        bytes address = 7;
+        bytes signature = 8;
+
+        message BlockId {
+
+            bytes hash = 1;
+            int64 number = 2;
+        }
+    }
+
+    message InternalTransaction {
+
+        bytes hash = 1;
+        bytes caller_address = 2;
+        bytes transfer_to_address = 3;
+        repeated CallValueInfo call_value_info = 4;
+        bytes note = 5;
+        bool rejected = 6;
+        string extra = 7;
+
+        message CallValueInfo {
+
+            int64 call_value = 1;
+            string token_id = 2;
+        }
+    }
+
+    message DelegatedResourceAccountIndex {
+
+        bytes account = 1;
+        repeated bytes from_accounts = 2;
+        repeated bytes to_accounts = 3;
+    }
+
+    message NodeInfo {
+
+        int64 begin_sync_num = 1;
+        string block = 2;
+        string solidity_block = 3;
+        int32 current_connect_count = 4;
+        int32 active_connect_count = 5;
+        int32 passive_connect_count = 6;
+        int64 total_flow = 7;
+        repeated PeerInfo peer_info_list = 8;
+        ConfigNodeInfo config_node_info = 9;
+        MachineInfo machine_info = 10;
+        map<string, string> cheat_witness_info_map = 11;
+
+        message PeerInfo {
+
+            string last_sync_block = 1;
+            int64 remain_num = 2;
+            int64 last_block_update_time = 3;
+            bool sync_flag = 4;
+            int64 head_block_time_we_both_have = 5;
+            bool need_sync_from_peer = 6;
+            bool need_sync_from_us = 7;
+            string host = 8;
+            int32 port = 9;
+            string node_id = 10;
+            int64 connect_time = 11;
+            double avg_latency = 12;
+            int32 sync_to_fetch_size = 13;
+            int64 sync_to_fetch_size_peek_num = 14;
+            int32 sync_block_requested_size = 15;
+            int64 un_fetch_syn_num = 16;
+            int32 block_in_porc_size = 17;
+            string head_block_we_both_have = 18;
+            bool is_active = 19;
+            int32 score = 20;
+            int32 node_count = 21;
+            int64 in_flow = 22;
+            int32 disconnect_times = 23;
+            string local_disconnect_reason = 24;
+            string remote_disconnect_reason = 25;
+        }
+
+        message ConfigNodeInfo {
+
+            string code_version = 1;
+            string p2p_version = 2;
+            int32 listen_port = 3;
+            bool discover_enable = 4;
+            int32 active_node_size = 5;
+            int32 passive_node_size = 6;
+            int32 send_node_size = 7;
+            int32 max_connect_count = 8;
+            int32 same_ip_max_connect_count = 9;
+            int32 backup_listen_port = 10;
+            int32 backup_member_size = 11;
+            int32 backup_priority = 12;
+            int32 db_version = 13;
+            int32 min_participation_rate = 14;
+            bool support_constant = 15;
+            double min_time_ratio = 16;
+            double max_time_ratio = 17;
+            int64 allow_creation_of_contracts = 18;
+            int64 allow_adaptive_energy = 19;
+        }
+
+        message MachineInfo {
+
+            int32 thread_count = 1;
+            int32 dead_lock_thread_count = 2;
+            int32 cpu_count = 3;
+            int64 total_memory = 4;
+            int64 free_memory = 5;
+            double cpu_rate = 6;
+            string java_version = 7;
+            string os_name = 8;
+            int64 jvm_total_memory = 9;
+            int64 jvm_free_memory = 10;
+            double process_cpu_rate = 11;
+            repeated MemoryDescInfo memory_desc_info_list = 12;
+            repeated DeadLockThreadInfo dead_lock_thread_info_list = 13;
+
+            message MemoryDescInfo {
+
+                string name = 1;
+                int64 init_size = 2;
+                int64 use_size = 3;
+                int64 max_size = 4;
+                double use_rate = 5;
+            }
+
+            message DeadLockThreadInfo {
+
+                string name = 1;
+                string lock_name = 2;
+                string lock_owner = 3;
+                string state = 4;
+                int64 block_time = 5;
+                int64 wait_time = 6;
+                string stack_trace = 7;
+            }
+        }
+    }
+
+    message MetricsInfo {
+
+        int64 interval = 1;
+        NodeInfo node = 2;
+        BlockChainInfo blockchain = 3;
+        NetInfo net = 4;
+
+        message NodeInfo {
+
+            string ip = 1;
+            int32 node_type = 2;
+            string version = 3;
+            int32 backup_status = 4;
+        }
+
+        message BlockChainInfo {
+
+            int64 head_block_num = 1;
+            int64 head_block_timestamp = 2;
+            string head_block_hash = 3;
+            int32 fork_count = 4;
+            int32 fail_fork_count = 5;
+            RateInfo block_process_time = 6;
+            RateInfo tps = 7;
+            int32 transaction_cache_size = 8;
+            RateInfo missed_transaction = 9;
+            repeated Witness witnesses = 10;
+            int64 fail_process_block_num = 11;
+            string fail_process_block_reason = 12;
+            repeated DupWitness dup_witness = 13;
+
+            message Witness {
+
+                string address = 1;
+                int32 version = 2;
+            }
+
+            message DupWitness {
+
+                string address = 1;
+                int64 block_num = 2;
+                int32 count = 3;
+            }
+        }
+
+        message RateInfo {
+
+            int64 count = 1;
+            double mean_rate = 2;
+            double one_minute_rate = 3;
+            double five_minute_rate = 4;
+            double fifteen_minute_rate = 5;
+        }
+
+        message NetInfo {
+
+            int32 error_proto_count = 1;
+            ApiInfo api = 2;
+            int32 connection_count = 3;
+            int32 valid_connection_count = 4;
+            RateInfo tcp_in_traffic = 5;
+            RateInfo tcp_out_traffic = 6;
+            int32 disconnection_count = 7;
+            repeated DisconnectionDetailInfo disconnection_detail = 8;
+            RateInfo udp_in_traffic = 9;
+            RateInfo udp_out_traffic = 10;
+            LatencyInfo latency = 11;
+
+            message ApiInfo {
+
+                RateInfo qps = 1;
+                RateInfo fail_qps = 2;
+                RateInfo out_traffic = 3;
+                repeated ApiDetailInfo detail = 4;
+
+                message ApiDetailInfo {
+
+                    string name = 1;
+                    RateInfo qps = 2;
+                    RateInfo fail_qps = 3;
+                    RateInfo out_traffic = 4;
+                }
+            }
+
+            message DisconnectionDetailInfo {
+
+                string reason = 1;
+                int32 count = 2;
+            }
+
+            message LatencyInfo {
+
+                int32 top99 = 1;
+                int32 top95 = 2;
+                int32 top75 = 3;
+                int32 total_count = 4;
+                int32 delay1_s = 5;
+                int32 delay2_s = 6;
+                int32 delay3_s = 7;
+                repeated LatencyDetailInfo detail = 8;
+
+                message LatencyDetailInfo {
+
+                    string witness = 1;
+                    int32 top99 = 2;
+                    int32 top95 = 3;
+                    int32 top75 = 4;
+                    int32 count = 5;
+                    int32 delay1_s = 6;
+                    int32 delay2_s = 7;
+                    int32 delay3_s = 8;
+                }
+            }
+        }
+    }
+
+    message PBFTMessage {
+
+        Raw raw_data = 1;
+        bytes signature = 2;
+
+        enum MsgType {
+
+            VIEW_CHANGE = 0;
+            REQUEST = 1;
+            PREPREPARE = 2;
+            PREPARE = 3;
+            COMMIT = 4;
+        }
+
+        enum DataType {
+
+            BLOCK = 0;
+            SRL = 1;
+        }
+
+        message Raw {
+
+            MsgType msg_type = 1;
+            DataType data_type = 2;
+            int64 view_n = 3;
+            int64 epoch = 4;
+            bytes data = 5;
+        }
+    }
+
+    message PBFTCommitResult {
+
+        bytes data = 1;
+        repeated bytes signature = 2;
+    }
+
+    message SRL {
+
+        repeated bytes sr_address = 1;
+    }
+}
+
+message google {
+
+    message protobuf {
+
+        message Any {
+
+            string type_url = 1;
+            bytes value = 2;
+        }
+    }
+}

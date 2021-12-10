@@ -10,6 +10,11 @@ Uint8List my_hexdecode(String hexStr) {
   return hex.decode((hexStr.length.isOdd ? '0' : '') + hexStr);
 }
 
+String bytesToAddress(Uint8List bytes) {
+  final checksum = sha256(sha256(bytes)).sublist(0, 4);
+  return base58.encode(Uint8List.fromList(bytes + checksum));
+}
+
 String publicKeyToAddress(String hexX, String hexY) {
   final plainKey = my_hexdecode(hexX) + my_hexdecode(hexY);
   final digest = SHA3Digest(256, true).process(Uint8List.fromList(plainKey));
@@ -17,7 +22,5 @@ String publicKeyToAddress(String hexX, String hexY) {
   String hash = hex.encode(digest);
   hash = '41' + hash.substring(hash.length - 40);
 
-  final checksum = hex.encode(sha256(sha256(my_hexdecode(hash)))).substring(0, 8);
-
-  return base58.encode(my_hexdecode(hash + checksum));
+  return bytesToAddress(my_hexdecode(hash));
 }
