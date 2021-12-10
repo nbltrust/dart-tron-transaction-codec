@@ -16,6 +16,7 @@ void main() {
     print(tx.delegate);
 
     expect(tx['contractType'], 'TransferContract');
+    expect(tx['ownerAddress'], 'TVEoCiDpv4pAmcKEevu63wpVSJYYvLyUTe');
     expect(tx['toAddress'], 'TEHaEvd6pcVTtSJ6zoXHupYUA44FQE7q8q');
     expect(tx['amount'], '10000000');
   });

@@ -1,7 +1,8 @@
 library tron_codec.transaction;
 
-import 'dart:convert';
+import 'dart:typed_data';
 
+import 'package:ethereum_util/ethereum_util.dart';
 import 'package:fixnum/fixnum.dart';
 import 'package:protobuf/protobuf.dart';
 import 'package:quiver/collection.dart';
@@ -61,5 +62,9 @@ class TronTransaction extends DelegatingMap {
     TronTransaction tx = new TronTransaction(rawHex);
 
     return tx;
+  }
+
+  Uint8List hashToSign() {
+    return sha256(my_hexdecode(this['rawHex']));
   }
 }
