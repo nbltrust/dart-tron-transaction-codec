@@ -21,7 +21,7 @@ class TronTransaction extends DelegatingMap {
   TronTransaction(String rawHex) {
     this.delegate['rawHex'] = rawHex;
 
-    final rawData = protocol_Transaction_raw.fromBuffer(my_hexdecode(rawHex));
+    final rawData = raw.fromBuffer(my_hexdecode(rawHex));
 
     if (rawData.contract.length > 0) {
       final parameter = rawData.contract.first.parameter;
