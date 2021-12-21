@@ -19,6 +19,7 @@ void main() {
     expect(tx['ownerAddress'], 'TVEoCiDpv4pAmcKEevu63wpVSJYYvLyUTe');
     expect(tx['toAddress'], 'TEHaEvd6pcVTtSJ6zoXHupYUA44FQE7q8q');
     expect(tx['amount'], '10000000');
+    assert(DateTime.now().isAfter(tx['expiration']));
   });
 
   // abcc6c592a47a94503b0fc32675c45d1c249d2a4150fa65fac12e075e7893354

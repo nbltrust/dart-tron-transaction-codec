@@ -23,6 +23,8 @@ class TronTransaction extends DelegatingMap {
 
     final rawData = raw.fromBuffer(my_hexdecode(rawHex));
 
+    this.delegate['expiration'] = DateTime.fromMicrosecondsSinceEpoch(rawData.expiration.toInt() * 1000, isUtc: true);
+
     if (rawData.contract.length > 0) {
       final parameter = rawData.contract.first.parameter;
       final typeUrl = parameter.typeUrl;
