@@ -1,18 +1,17 @@
 name: tron_codec
-version: 0.1.3
+version: 2.0.0
 
 dependencies:
-  bs58: ^1.0.1
-  convert: ^2.1.1
-  protobuf: ^1.1.4
-  typed_data: ^1.2.0
-  ethereum_util:
-    git:
-      url: https://github.com/ethereumdart/ethereum_util
+  bs58: ^1.0.2
+  convert: ^3.0.0
+  protobuf: ^2.0.0
+  typed_data: ^1.3.0
+  quiver: ^3.0.0
+  pointycastle: ^3.6.0
 
 dev_dependencies: 
-  meta: 1.3.0
-  test: 1.16.5
+  meta: any
+  test: any
 
 environment:
-  sdk: ">=1.19.0 <3.0.0"
+  sdk: ">=2.12.0 <3.0.0"

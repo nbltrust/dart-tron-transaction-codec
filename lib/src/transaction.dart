@@ -2,7 +2,6 @@ library tron_codec.transaction;
 
 import 'dart:typed_data';
 
-import 'package:ethereum_util/ethereum_util.dart';
 import 'package:fixnum/fixnum.dart';
 import 'package:protobuf/protobuf.dart';
 import 'package:quiver/collection.dart';
@@ -10,6 +9,7 @@ import 'package:tron_codec/tron_codec.dart';
 
 import 'proto/tron.pb.dart';
 
+import '';
 Map<String, dynamic> CONTRACT_TYPE_MAP = {
   'TriggerSmartContract': (List<int> buffer) => protocol_TriggerSmartContract.fromBuffer(buffer),
   'TransferContract': (List<int> buffer) => protocol_TransferContract.fromBuffer(buffer),
@@ -21,7 +21,7 @@ class TronTransaction extends DelegatingMap {
   TronTransaction(String rawHex) {
     this.delegate['rawHex'] = rawHex;
 
-    final rawData = raw.fromBuffer(my_hexdecode(rawHex));
+    final rawData = protocol_Transaction_raw.fromBuffer(my_hexdecode(rawHex));
 
     this.delegate['expiration'] = DateTime.fromMicrosecondsSinceEpoch(rawData.expiration.toInt() * 1000, isUtc: true);
 
@@ -67,6 +67,7 @@ class TronTransaction extends DelegatingMap {
   }
 
   Uint8List hashToSign() {
+
     return sha256(my_hexdecode(this['rawHex']));
   }
 }
